@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>雑文｜たかつかこうじです</title>
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Hiragino Sans", sans-serif;
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 0 24px;
+    line-height: 1.8;
+    background-color: #ffffff;
+    color: #111111;
+}
+
+/* ハンバーガーボタン */
+.hamburger {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 30px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #111111;
+    transition: all 0.3s ease-in-out;
+    position: absolute;
+}
+
+.hamburger span:nth-child(1) { top: 0; }
+.hamburger span:nth-child(2) { top: 11px; }
+.hamburger span:nth-child(3) { top: 22px; }
+
+.hamburger.open span:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+    background-color: #ffffff;
+}
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+    background-color: #ffffff;
+}
+
+/* メニュー画面 */
+.nav-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-menu.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.nav-menu li {
+    margin: 24px 0;
+}
+
+.nav-menu a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: color 0.2s ease;
+}
+
+.nav-menu a:hover {
+    color: #0099FF;
+}
+
+/* ヘッダーエリア */
+.header-group {
+    text-align: center;
+}
+
+h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 0.04em;
+    color: #000000;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: #222222;
+    letter-spacing: 0.06em;
+    margin-top: 0.3rem;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.brand-lines {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-top: 14px;
+}
+
+.line-purple {
+    height: 2px;
+    background-color: #660099;
+}
+
+.line-blue {
+    height: 2px;
+    background-color: #0099FF;
+}
+
+/* コンテンツ部分 */
+.content {
+    margin-top: 2.5rem;
+}
+
+.section {
+    margin-bottom: 2rem;
+}
+
+h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #111111;
+    border-left: 3px solid #660099;
+    padding-left: 8px;
+}
+
+ul.list {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+
+ul.list li {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+ul.list a {
+    color: #0099FF;
+    text-decoration: none;
+}
+
+ul.list a:hover {
+    text-decoration: underline;
+}
+
+@media (min-width: 820px) {
+    body {
+        max-width: 800px;
+        margin: 80px auto;
+    }
+    .header-group, .content {
+        text-align: left;
+    }
+    .brand-lines {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<button class="hamburger" id="hamburger" aria-label="メニューを開く">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+<nav class="nav-menu" id="nav-menu">
+    <ul>
+        <li><a href="https://t1ktk.github.io/">ホーム</a></li>
+        <li><a href="research.html">研究関係</a></li>
+        <li><a href="teaching.html">教育関係</a></li>
+        <li><a href="note.html">雑文</a></li>
+    </ul>
+</nav>
+
+<div class="header-group">
+    <h1>雑文</h1>
+    
+    <p class="subtitle">Notes</p>
+    
+    <div class="brand-lines">
+        <div class="line-purple"></div>
+        <div class="line-blue"></div>
+    </div>
+</div>
+
+<main class="content">
+    <div class="section">
+        <h2>経験した話シリーズ</h2>
+           <p>以下の情報は，あくまで個人的な経験に基づくものです。正確性すら保証できませんので参考程度にとどめてください。なお，これらの情報を利用したことにより生じたいかなる損害についても責任を負いかねます。
+           </p>
+        <ul class="list">
+            <li><a href="#">JASSO業免（思い出したころに筑波大学で私が経験した事例を共有する予定です）</a></li>
+        </ul>
+        <h2>調べた話シリーズ</h2>
+           <p>以下の情報は，あくまで私が調べただけの結果です。正確性すら保証できませんので参考程度にとどめてください。なお，これらの情報を利用したことにより生じたいかなる損害についても責任を負いかねます。
+           </p>
+        <ul class="list">
+            <li><a href="#">平砂浴場と公衆浴場法（気が向いたら書きます）</a></li>
+        </ul>
+    </div>
+
+</main>
+
+<script>
+const hamburger = document.getElementById("hamburger");
+const navMenu = document.getElementById("nav-menu");
+
+hamburger.addEventListener("click", () => {
+    hamburger.classList.toggle("open");
+    navMenu.classList.toggle("open");
+});
+</script>
+</body>
+</html>

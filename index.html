@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>たかつかこうじです</title>
+
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Hiragino Sans", sans-serif;
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 0 24px;
+    line-height: 1.8;
+    background-color: #ffffff;
+    color: #111111;
+}
+
+/* ハンバーガーボタン */
+.hamburger {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 30px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #111111;
+    transition: all 0.3s ease-in-out;
+    position: absolute;
+}
+
+.hamburger span:nth-child(1) { top: 0; }
+.hamburger span:nth-child(2) { top: 11px; }
+.hamburger span:nth-child(3) { top: 22px; }
+
+/* ハンバーガーボタン（開いた時の×マーク） */
+.hamburger.open span:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+    background-color: #ffffff;
+}
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+    background-color: #ffffff;
+}
+
+/* メニュー画面（オーバーレイ） */
+.nav-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-menu.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.nav-menu li {
+    margin: 24px 0;
+}
+
+.nav-menu a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: color 0.2s ease;
+}
+
+.nav-menu a:hover {
+    color: #0099FF;
+}
+
+/* ヘッダーエリア */
+.header-group {
+    text-align: center; /
+}
+
+h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 0.04em;
+    color: #000000;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: #222222;
+    letter-spacing: 0.06em;
+    margin-top: 0.3rem;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+/* Koji Takatsuka の直下に配置した2本線 */
+.brand-lines {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-top: 14px;
+}
+
+.line-purple {
+    height: 4px;
+    background-color: #6600cc; /* 筑波紫 */
+}
+
+.line-blue {
+    height: 2px;
+    background-color: #0099FF; /* 北九大の色？ */
+}
+
+/* コンテナ */
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ボタンエリア */
+.links {
+    text-align: left; /* スマホでも左寄せ */
+    margin-top: 1.5rem;
+}
+
+.button {
+    display: inline-block;
+    text-decoration: none;
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 4px;
+    margin-right: 8px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.researchmap {
+    background-color: #0099FF;
+}
+
+.orcid {
+    background-color: #a6ce39;
+}
+
+/* 本文エリア */
+.bio {
+    text-align: left; /* スマホでも左寄せ */
+    margin-top: 1.5rem;
+}
+
+.bio .japanese {
+    font-size: 0.95rem;
+    margin-bottom: 1.2rem;
+    color: #000000;
+    font-weight: 400;
+}
+
+.bio .english {
+    font-size: 0.85rem;
+    color: #222222;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* 連絡先エリア */
+.contact {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: #333333;
+    text-align: left; /* スマホでも左寄せ */
+}
+
+/* スライドショー */
+.slideshow {
+    text-align: center;
+    margin-top: 32px;
+    margin-bottom: 0;
+}
+
+.slideshow img {
+    width: 100%;
+    max-width: 380px;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 4px;
+    vertical-align: bottom;
+}
+
+.slideshow .caption {
+    margin: 6px 0 0 0;
+    font-size: 0.82rem;
+    color: #333333;
+    letter-spacing: 0.02em;
+}
+
+.slideshow img,
+.slideshow .caption {
+    transition: opacity 1s ease-in-out;
+    opacity: 1;
+}
+
+.slideshow .fade-out {
+    opacity: 0;
+}
+
+/* 主な業績エリア */
+.publications-section {
+    margin-top: 3.5rem;
+    text-align: left;
+}
+
+.publications-section h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-left: 3px solid #6600cc; /* 筑波紫の縦線 */
+    padding-left: 8px;
+    color: #111111;
+}
+
+.pub-category h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #333333;
+}
+
+.pub-list {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.pub-list li {
+    font-size: 0.88rem;
+    margin-bottom: 0.6rem;
+    color: #222222;
+    line-height: 1.6;
+}
+
+.pub-list a {
+    color: #0099FF;
+    text-decoration: none;
+}
+
+.pub-list a:hover {
+    text-decoration: underline;
+}
+
+/* パソコン表示時のレイアウト */
+@media (min-width: 820px) {
+    body {
+        max-width: 800px;
+        margin: 80px auto;
+    }
+
+    .container {
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: center;
+        gap: 48px;
+        margin-top: 2rem;
+    }
+
+    .main-content {
+        flex: 1;
+        min-width: 320px;
+    }
+
+    .slideshow {
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    .slideshow img {
+        width: 360px;
+        height: 240px;
+    }
+
+    .brand-lines {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ハンバーガーボタン -->
+<button class="hamburger" id="hamburger" aria-label="メニューを開く">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+<!-- ナビゲーションメニュー -->
+<nav class="nav-menu" id="nav-menu">
+    <ul>
+        <li><a href="index.html">ホーム</a></li>
+        <li><a href="research.html">研究関係</a></li>
+        <li><a href="teaching.html">教育関係</a></li>
+        <li><a href="note.html">雑文</a></li>
+    </ul>
+</nav>
+
+<div class="header-group">
+    <h1>たかつかこうじです</h1>
+    <p class="subtitle">Koji Takatsuka</p>
+    
+    <div class="brand-lines">
+        <div class="line-purple"></div>
+        <div class="line-blue"></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="main-content">
+        <div class="links">
+            <a href="https://researchmap.jp/kojitakatsuka"
+               class="button researchmap"
+               target="_blank"
+               rel="noopener noreferrer">
+               researchmap
+            </a>
+
+            <a href="https://orcid.org/0009-0003-4544-4537"
+               class="button orcid"
+               target="_blank"
+               rel="noopener noreferrer">
+               ORCID
+            </a>
+        </div>
+
+        <div class="bio">
+            <p class="japanese">
+                筑波大学大学院の髙塚幸治と申します。<br>
+                政治意識や政治参加に関心があります。
+            </p>
+            <p class="english">
+                PhD Student, University of Tsukuba.<br>
+                My research interests include political behavior, political attitudes, political participation, and public opinion.
+            </p>
+        </div>
+
+        <div class="contact">
+            takatsuka.koji.tkb_ea [at] u.tsukuba.ac.jp<br>
+            授業受講者のお問い合わせは指定した方法でお願いします。
+        </div>
+    </div>
+
+    <div class="slideshow">
+        <img id="slide" src="images/takatsukasta.jpeg" alt="">
+        <p id="caption" class="caption">JR高塚駅（浜松市）</p>
+    </div>
+</div>
+
+<!-- 主な業績エリア -->
+<section class="publications-section">
+    <h2>主な研究業績（少ないですが）</h2>
+    
+    <div class="pub-category">
+        くわしくはresearchmapをご覧ください。
+        <h3>論文</h3>
+        <ul class="pub-list">
+            <li>
+                髙塚幸治・中井遼（2025）「<a href="https://doi.org/10.7218/nenpouseijigaku.76.1_263" target="_blank" rel="noopener noreferrer">日本の生徒会活動が政治意識の涵養に与える影響：活動のあり方の違いに着目して</a>」『年報政治学』76巻1号263-283頁。（査読あり）
+            </li>
+        </ul>
+    </div>
+</section>
+
+<script>
+// ハンバーガーメニューの開閉処理
+const hamburger = document.getElementById("hamburger");
+const navMenu = document.getElementById("nav-menu");
+
+hamburger.addEventListener("click", () => {
+    hamburger.classList.toggle("open");
+    navMenu.classList.toggle("open");
+});
+
+// スライドショーの処理
+const slideData = [
+    { src: "images/takatsukasta.jpeg", caption: "JR高塚駅（浜松市）" },
+    { src: "images/kencho.jpg", caption: "福井県庁/福井県警察本部" },
+    { src: "images/kaigyo.jpg", caption: "北陸新幹線敦賀開業の銘板" },
+    { src: "images/fukui-keirin.jpg", caption: "福井市営福井競輪場" },
+    { src: "images/kokurakeiba.jpg", caption: "小倉競馬場と北九州市立大学本館" },
+    { src: "images/mojikosta.jpg", caption: "JR門司港駅" },
+    { src: "images/hakushi-go.jpg", caption: "博士号" },
+    { src: "images/rocket_yoko.jpeg", caption: "JAXA筑波宇宙センター" },
+    { src: "images/tsukuba151-50.jpeg", caption: "筑波大学創基151年開学50周年" }
+];
+
+let n = 0;
+const imgEl = document.getElementById("slide");
+const captionEl = document.getElementById("caption");
+
+setInterval(() => {
+    imgEl.classList.add("fade-out");
+    captionEl.classList.add("fade-out");
+
+    setTimeout(() => {
+        n = (n + 1) % slideData.length;
+        imgEl.src = slideData[n].src;
+        captionEl.innerText = slideData[n].caption;
+        
+        imgEl.classList.remove("fade-out");
+        captionEl.classList.remove("fade-out");
+    }, 1000); 
+
+}, 8000);
+</script>
+</body>
+</html>
