@@ -360,11 +360,20 @@
       infoDiv.appendChild(enSpan);
       infoDiv.appendChild(jaSpan);
 
+      const btnGroup = document.createElement('div');
+      btnGroup.style.cssText = 'display: flex; gap: 4px;';
+
       const restoreBtn = document.createElement('button');
       restoreBtn.className = 'btn btn-secondary';
       restoreBtn.style.cssText = 'padding: 4px 8px; font-size: 0.75rem;';
-      restoreBtn.textContent = '未学習に戻す';
+      restoreBtn.textContent = '戻す';
       restoreBtn.onclick = () => restoreToUnlearned(index);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn btn-danger';
+      delBtn.style.cssText = 'padding: 4px 8px; font-size: 0.75rem;';
+      delBtn.textContent = '削除';
+      delBtn.onclick = () => deleteLearnedSingle(index);
 
       li.appendChild(infoDiv);
       li.appendChild(restoreBtn);
