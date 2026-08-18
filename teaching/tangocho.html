@@ -88,13 +88,41 @@
     .word-info { display: flex; flex-direction: column; }
     .word-info .en { font-weight: 700; font-size: 0.9rem; }
     .word-info .ja { font-size: 0.8rem; color: #64748b; }
+
+    /* 注意事項ボックス */
+    .notes-box {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: #475569;
+      line-height: 1.5;
+    }
+    .notes-box h4 {
+      margin: 0 0 6px 0;
+      font-size: 0.83rem;
+      color: #334155;
+    }
+    .notes-box ul {
+      margin: 0;
+      padding-left: 16px;
+    }
+    .notes-box li {
+      margin-bottom: 4px;
+    }
+    .notes-box li:last-child {
+      margin-bottom: 0;
+    }
+    
   </style>
 </head>
 <body>
 
 <div class="container">
   <header>
-    <h1>暗記カード</h1>
+    <h1>英単語学習用ツール</h1>
   </header>
 
   <div class="tabs">
@@ -190,6 +218,17 @@
   </div>
 </div>
 
+<!-- 最下部：注意事項エリア -->
+  <div class="notes-box">
+    <h4>利用上の注意</h4>
+    <ul>
+      <li>データはお使いのスマホやPCのブラウザ（ローカルストレージ）に自動保存されます。</li>
+      <li>数日間利用しなかった場合や、ブラウザの閲覧履歴・キャッシュの消去、プライベートモード等での利用時はデータが消える場合があります。</li>
+      <li>定期的にバックアップタブからファイルを保存しておくことをおすすめします。</li>
+      <li>別のスマホやPCへ引き継ぐ際は、バックアップしたファイルを「復元」してください。</li>
+    </ul>
+  </div>  
+  
 <script>
   // 初期データの定義
   const defaultList = [
