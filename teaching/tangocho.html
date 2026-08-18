@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>法学暗記フラッシュカード</title>
+  <title>英単語学習用ツール（ベータ）</title></title>
   <style>
     :root {
       --primary: #2563eb;
@@ -94,7 +94,7 @@
 
 <div class="container">
   <header>
-    <h1>法学暗記カード</h1>
+    <h1>暗記カード</h1>
   </header>
 
   <div class="tabs">
@@ -146,14 +146,23 @@
     </div>
 
     <div class="box">
-      <h3>まとめて一括登録 (Excel / TSV対応)</h3>
+      <h3>まとめて一括登録</h3>
       <p style="font-size: 0.78rem; color: #64748b; margin-top: 0;">
-        Excelやスプレッドシートから「英単語」と「日本語訳」の2列をコピーしてそのまま貼り付けできます。
+        「コロン(:)」「スラッシュ(/)」「スペース」「タブ」などで区切って貼り付けできます。<br>
+        例：<code>Constitution : 憲法</code>
       </p>
       <div class="form-group">
-        <textarea id="import-text" placeholder="例：&#10;Constitution	憲法&#10;Sovereignty	主権"></textarea>
-        <button class="btn btn-success" onclick="handleBulkImport()">まとめて登録実行</button>
+        <textarea id="import-text" placeholder="Constitution : 憲法&#10;Sovereignty : 主権&#10;Plaintiff : 原告"></textarea>
+        <button class="btn btn-success" onclick="handleBulkImport()">テキストから一括登録</button>
       </div>
+
+      <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 12px 0;">
+
+      <p style="font-size: 0.78rem; color: #64748b; margin-top: 0;">
+        CSVファイルやテキストファイルからの読み込みも可能です。
+      </p>
+      <button class="btn btn-secondary btn-full" onclick="document.getElementById('csv-file-input').click()">CSV / テキストファイルを選択</button>
+      <input type="file" id="csv-file-input" accept=".csv,.txt,.tsv" onchange="handleCsvFileUpload(event)" style="display: none;">
     </div>
 
     <div class="box">
@@ -369,7 +378,7 @@
     renderManageList();
   }
 
-  /* 単語の個別追加・一括追加 */
+  /* 単語の個別追加 */
   function handleAddSingle(evt) {
     evt.preventDefault();
     const wordInput = document.getElementById('add-word');
@@ -388,30 +397,75 @@
     alert('追加しました！');
   }
 
-  function handleBulkImport() {
-    const rawText = document.getElementById('import-text').value.trim();
-    if (!rawText) return alert('テキストを入力してください');
+  /* 区切り文字を自動判別して一括登録する処理 */
+  function processImportText(rawText) {
+    if (!rawText.trim()) return 0;
 
     const lines = rawText.split('\n');
     let addedCount = 0;
 
     lines.forEach(line => {
-      if (!line.trim()) return;
-      const parts = line.includes('\t') ? line.split('\t') : line.split(',');
-      if (parts.length >= 2) {
+      const trimmed = line.trim();
+      if (!trimmed) return;
+
+      let word = '', meaning = [];
+
+      if (trimmed.includes('\t')) {
+        [word, ...meaning] = trimmed.split('\t');
+      } else if (trimmed.includes(':') || trimmed.includes('：')) {
+        [word, ...meaning] = trimmed.split(/[:：]/);
+      } else if (trimmed.includes(' - ')) {
+        [word, ...meaning] = trimmed.split(' - ');
+      } else if (trimmed.includes('/')) {
+        [word, ...meaning] = trimmed.split('/');
+      } else if (trimmed.includes(',')) {
+        [word, ...meaning] = trimmed.split(',');
+      } else {
+        const spaceIndex = trimmed.search(/\s/);
+        if (spaceIndex !== -1) {
+          word = trimmed.substring(0, spaceIndex);
+          meaning = [trimmed.substring(spaceIndex).trim()];
+        }
+      }
+
+      const meaningText = Array.isArray(meaning) ? meaning.join(' ').trim() : '';
+      if (word && meaningText) {
         unlearnedWords.push({
           id: Date.now() + Math.random(),
-          word: parts[0].trim(),
-          meaning: parts[1].trim()
+          word: word.trim(),
+          meaning: meaningText
         });
         addedCount++;
       }
     });
 
     saveData();
-    document.getElementById('import-text').value = '';
     renderManageList();
-    alert(`${addedCount}件を一括追加しました！`);
+    return addedCount;
+  }
+
+  function handleBulkImport() {
+    const rawText = document.getElementById('import-text').value;
+    const addedCount = processImportText(rawText);
+    if (addedCount > 0) {
+      document.getElementById('import-text').value = '';
+      alert(`${addedCount}件を一括追加しました！`);
+    } else {
+      alert('有効なデータが見つかりませんでした。書き方を確認してください。');
+    }
+  }
+
+  function handleCsvFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const addedCount = processImportText(e.target.result);
+      alert(`${addedCount}件をファイルから一括追加しました！`);
+      event.target.value = '';
+    };
+    reader.readAsText(file);
   }
 
   /* バックアップ操作 */
