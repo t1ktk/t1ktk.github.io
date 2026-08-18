@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>英単語学習用ツール</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --subtext: #64748b;
+      --border: #e2e8f0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 全体の幅を 480px に固定・統一 */
+    .container {
+      width: 100%;
+      max-width: 480px;
+      box-sizing: border-box;
+    }
+
+    header { text-align: center; margin-bottom: 20px; }
+    h1 { font-size: 1.25rem; font-weight: 700; margin: 0; color: #0f172a; }
+    
+    .tabs {
+      display: flex; gap: 4px; margin-bottom: 16px; background: #e2e8f0;
+      padding: 3px; border-radius: 10px;
+    }
+    .tab-btn {
+      flex: 1; padding: 8px 0; border: none; background: transparent;
+      border-radius: 7px; font-size: 0.82rem; font-weight: 600; color: #64748b; cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tab-btn.active { background: #ffffff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* フラッシュカード */
+    .card {
+      width: 100%; height: 210px; background-color: var(--card-bg);
+      border-radius: 16px; border: 1px solid var(--border);
+      box-shadow: 0 4px 20px -2px rgba(0,0,0,0.04);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 24px; box-sizing: border-box; cursor: pointer;
+      user-select: none; position: relative; margin-bottom: 12px;
+      transition: transform 0.1s ease;
+    }
+    .card:active { transform: scale(0.995); }
+    .card .word { font-size: 1.75rem; font-weight: 700; margin-bottom: 8px; word-break: break-word; color: #0f172a; }
+    .card .meaning { font-size: 1.2rem; color: var(--primary); font-weight: 600; word-break: break-word; }
+    .card .label { font-size: 0.75rem; color: #94a3b8; position: absolute; top: 12px; right: 16px; font-weight: 500; }
+    .progress-bar { text-align: center; font-size: 0.8rem; color: var(--subtext); margin-bottom: 12px; font-weight: 500; }
+
+    /* ボタン・フォーム */
+    .btn-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+    .btn-sub-group { display: flex; gap: 8px; margin-bottom: 8px; }
+    button.btn {
+      padding: 11px; border: none; border-radius: 10px; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+    }
+    button.btn:active { opacity: 0.85; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-secondary { background: #e2e8f0; color: #334155; }
+    .btn-full { width: 100%; }
+
+    .box {
+      background: white; padding: 16px; border-radius: 12px; border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02); margin-bottom: 12px;
+    }
+    .box h3 { margin: 0 0 10px 0; font-size: 0.9rem; font-weight: 700; }
+    
+    form, .form-group { display: flex; flex-direction: column; gap: 8px; }
+    input, textarea {
+      padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 0.88rem; box-sizing: border-box; font-family: inherit;
+    }
+    textarea { resize: vertical; min-height: 90px; }
+
+    /* リスト */
+    .word-list { list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; }
+    .word-item {
+      background: #f8fafc; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+      margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .word-info { display: flex; flex-direction: column; }
+    .word-info .en { font-weight: 700; font-size: 0.9rem; }
+    .word-info .ja { font-size: 0.8rem; color: var(--subtext); }
+
+    /* スッキリしたフッター風の注意事項（container内に配置） */
+    .notes-box {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      margin-top: 24px;
+      font-size: 0.75rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+    .notes-box h4 {
+      margin: 0 0 6px 0;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #475569;
+    }
+    .notes-box ul {
+      margin: 0;
+      padding-left: 16px;
+    }
+    .notes-box li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>英単語学習用ツール</h1>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('learn', event)">未学習</button>
+    <button class="tab-btn" onclick="switchTab('learned', event)">覚えた語</button>
+    <button class="tab-btn" onclick="switchTab('manage', event)">単語登録</button>
+    <button class="tab-btn" onclick="switchTab('backup', event)">バックアップ</button>
+  </div>
+
+  <!-- 1. 未学習カード -->
+  <div id="tab-learn" class="tab-content active">
+    <div id="card" class="card" onclick="flipCard()">
+      <span class="label" id="card-label">表面</span>
+      <div class="word" id="card-text">単語がありません</div>
+      <div class="meaning" id="card-subtext" style="display: none;"></div>
+    </div>
+
+    <div class="progress-bar" id="progress">0 / 0</div>
+
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="prevCard()">前へ</button>
+      <button class="btn btn-primary" onclick="flipCard()">めくる</button>
+      <button class="btn btn-secondary" onclick="nextCard()">次へ</button>
+    </div>
+
+    <div class="btn-sub-group">
+      <button class="btn btn-success btn-full" onclick="markAsLearned()">覚えた！</button>
+      <button class="btn btn-secondary btn-full" onclick="shuffleCards()">シャッフル</button>
+    </div>
+  </div>
+
+  <!-- 2. 覚えた単語リスト -->
+  <div id="tab-learned" class="tab-content">
+    <div class="box">
+      <h3>覚えた単語一覧 (<span id="learned-count">0</span>)</h3>
+      <ul class="word-list" id="learned-word-list"></ul>
+    </div>
+  </div>
+
+  <!-- 3. 単語管理・登録モード -->
+  <div id="tab-manage" class="tab-content">
+    <div class="box">
+      <h3>1語ずつ追加</h3>
+      <form onsubmit="handleAddSingle(event)">
+        <input type="text" id="add-word" placeholder="英単語 (例: Constitution)" required>
+        <input type="text" id="add-meaning" placeholder="日本語訳 (例: 憲法)" required>
+        <button type="submit" class="btn btn-primary">追加する</button>
+      </form>
+    </div>
+
+    <div class="box">
+      <h3>まとめて一括登録</h3>
+      <p style="font-size: 0.78rem; color: #64748b; margin-top: 0;">
+        「コロン(:)」「スラッシュ(/)」「スペース」「タブ」などで区切って貼り付けできます。<br>
+        例：<code>Constitution : 憲法</code>
+      </p>
+      <div class="form-group">
+        <textarea id="import-text" placeholder="Constitution : 憲法&#10;Sovereignty : 主権&#10;Plaintiff : 原告"></textarea>
+        <button class="btn btn-success" onclick="handleBulkImport()">テキストから一括登録</button>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 12px 0;">
+
+      <p style="font-size: 0.78rem; color: #64748b; margin-top: 0;">
+        CSVファイルやテキストファイルからの読み込みも可能です。
+      </p>
+      <button class="btn btn-secondary btn-full" onclick="document.getElementById('csv-file-input').click()">CSV / テキストファイルを選択</button>
+      <input type="file" id="csv-file-input" accept=".csv,.txt,.tsv" onchange="handleCsvFileUpload(event)" style="display: none;">
+    </div>
+
+    <div class="box">
+      <h3>未学習の単語一覧 (<span id="total-count">0</span>)</h3>
+      <ul class="word-list" id="word-list"></ul>
+    </div>
+  </div>
+
+  <!-- 4. バックアップ・データ操作モード -->
+  <div id="tab-backup" class="tab-content">
+    <div class="box">
+      <h3>ファイルバックアップ・復元</h3>
+      <p style="font-size: 0.8rem; color: #64748b; margin-top: 0;">単語データをJSONファイルとして保存したり、別の端末に引き継ぐことができます。</p>
+      <div class="btn-sub-group">
+        <button class="btn btn-secondary btn-full" onclick="exportToFile()">保存（ダウンロード）</button>
+        <button class="btn btn-secondary btn-full" onclick="document.getElementById('file-input').click()">復元</button>
+      </div>
+      <input type="file" id="file-input" accept=".json" onchange="importFromFile(event)" style="display: none;">
+    </div>
+
+    <div class="box" style="border: 1px solid #fee2e2;">
+      <h3>データの初期化</h3>
+      <button class="btn btn-danger btn-full" onclick="handleClearAll()">全データを削除して初期化</button>
+    </div>
+  </div>
+
+  <!-- 注意事項（container内部に移動・幅統一） -->
+  <footer class="notes-box">
+    <h4>利用上の注意</h4>
+    <ul>
+      <li>データはお使いのスマホやPCのブラウザ（ローカルストレージ）に自動保存されます。</li>
+      <li>ブラウザの閲覧履歴・キャッシュの消去やプライベートモード等の利用時はデータが消える場合があります。</li>
+      <li>定期的に「バックアップ」タブからファイルを保存しておくことをおすすめします。</li>
+      <li>別のスマホやPCへ引き継ぐ際は、バックアップしたファイルを「復元」してください。</li>
+    </ul>
+  </footer>
+
+</div>
+
+<script>
+  // 初期データの定義
+  const defaultList = [
+    { id: 1, word: "vote", meaning: "投票する" },
+    { id: 2, word: "polling station", meaning: "投票所" },
+    { id: 3, word: "election", meaning: "選挙" }
+  ];
+
+  // ローカルストレージの読み書き
+  let unlearnedWords = JSON.parse(localStorage.getItem('unlearned_words')) || [...defaultList];
+  let learnedWords = JSON.parse(localStorage.getItem('learned_words')) || [];
+
+  let currentIndex = 0;
+  let isShowingFront = true;
+
+  function init() {
+    updateCard();
+  }
+
+  function saveData() {
+    localStorage.setItem('unlearned_words', JSON.stringify(unlearnedWords));
+    localStorage.setItem('learned_words', JSON.stringify(learnedWords));
+  }
+
+  function switchTab(tabName, evt) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    evt.target.classList.add('active');
+
+    if (tabName === 'learn') updateCard();
+    if (tabName === 'learned') renderLearnedList();
+    if (tabName === 'manage') renderManageList();
+  }
+
+  /* フラッシュカード制御 */
+  function updateCard() {
+    const textEl = document.getElementById('card-text');
+    const subtextEl = document.getElementById('card-subtext');
+    const labelEl = document.getElementById('card-label');
+    const progressEl = document.getElementById('progress');
+
+    if (unlearnedWords.length === 0) {
+      textEl.textContent = "未学習の単語はありません！";
+      subtextEl.style.display = "none";
+      labelEl.textContent = "COMPLETE";
+      progressEl.textContent = "0 / 0";
+      return;
+    }
+
+    if (currentIndex >= unlearnedWords.length) currentIndex = 0;
+    if (currentIndex < 0) currentIndex = unlearnedWords.length - 1;
+
+    isShowingFront = true;
+    textEl.textContent = unlearnedWords[currentIndex].word;
+    subtextEl.textContent = unlearnedWords[currentIndex].meaning;
+    subtextEl.style.display = "none";
+    labelEl.textContent = "表面";
+    progressEl.textContent = `${currentIndex + 1} / ${unlearnedWords.length}`;
+  }
+
+  function flipCard() {
+    if (unlearnedWords.length === 0) return;
+    const subtextEl = document.getElementById('card-subtext');
+    const labelEl = document.getElementById('card-label');
+
+    isShowingFront = !isShowingFront;
+    subtextEl.style.display = isShowingFront ? "none" : "block";
+    labelEl.textContent = isShowingFront ? "表面" : "裏面";
+  }
+
+  function nextCard() {
+    if (unlearnedWords.length === 0) return;
+    currentIndex = (currentIndex + 1) % unlearnedWords.length;
+    updateCard();
+  }
+
+  function prevCard() {
+    if (unlearnedWords.length === 0) return;
+    currentIndex = (currentIndex - 1 + unlearnedWords.length) % unlearnedWords.length;
+    updateCard();
+  }
+
+  /* 「覚えた！」処理 */
+  function markAsLearned() {
+    if (unlearnedWords.length === 0) return;
+    const item = unlearnedWords.splice(currentIndex, 1)[0];
+    learnedWords.push(item);
+    
+    saveData();
+    if (currentIndex >= unlearnedWords.length && unlearnedWords.length > 0) currentIndex = 0;
+    updateCard();
+  }
+
+  function restoreToUnlearned(index) {
+    const item = learnedWords.splice(index, 1)[0];
+    unlearnedWords.push(item);
+    saveData();
+    renderLearnedList();
+  }
+
+  function shuffleCards() {
+    for (let i = unlearnedWords.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [unlearnedWords[i], unlearnedWords[j]] = [unlearnedWords[j], unlearnedWords[i]];
+    }
+    currentIndex = 0;
+    saveData();
+    updateCard();
+  }
+
+  /* 単語リストの描画 */
+  function renderManageList() {
+    const listEl = document.getElementById('word-list');
+    document.getElementById('total-count').textContent = unlearnedWords.length;
+    listEl.innerHTML = '';
+
+    unlearnedWords.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.className = 'word-item';
+
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'word-info';
+
+      const enSpan = document.createElement('span');
+      enSpan.className = 'en';
+      enSpan.textContent = item.word;
+
+      const jaSpan = document.createElement('span');
+      jaSpan.className = 'ja';
+      jaSpan.textContent = item.meaning;
+
+      infoDiv.appendChild(enSpan);
+      infoDiv.appendChild(jaSpan);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn btn-danger';
+      delBtn.style.cssText = 'padding: 4px 10px; font-size: 0.75rem;';
+      delBtn.textContent = '削除';
+      delBtn.onclick = () => deleteSingle(index);
+
+      li.appendChild(infoDiv);
+      li.appendChild(delBtn);
+      listEl.appendChild(li);
+    });
+  }
+
+  function renderLearnedList() {
+    const listEl = document.getElementById('learned-word-list');
+    document.getElementById('learned-count').textContent = learnedWords.length;
+    listEl.innerHTML = '';
+
+    learnedWords.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.className = 'word-item';
+
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'word-info';
+
+      const enSpan = document.createElement('span');
+      enSpan.className = 'en';
+      enSpan.textContent = item.word;
+
+      const jaSpan = document.createElement('span');
+      jaSpan.className = 'ja';
+      jaSpan.textContent = item.meaning;
+
+      infoDiv.appendChild(enSpan);
+      infoDiv.appendChild(jaSpan);
+
+      const btnGroup = document.createElement('div');
+      btnGroup.style.cssText = 'display: flex; gap: 4px;';
+
+      const restoreBtn = document.createElement('button');
+      restoreBtn.className = 'btn btn-secondary';
+      restoreBtn.style.cssText = 'padding: 4px 8px; font-size: 0.75rem;';
+      restoreBtn.textContent = '戻す';
+      restoreBtn.onclick = () => restoreToUnlearned(index);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn btn-danger';
+      delBtn.style.cssText = 'padding: 4px 8px; font-size: 0.75rem;';
+      delBtn.textContent = '削除';
+      delBtn.onclick = () => deleteLearnedSingle(index);
+
+      btnGroup.appendChild(restoreBtn);
+      btnGroup.appendChild(delBtn);
+
+      li.appendChild(infoDiv);
+      li.appendChild(btnGroup); // 修正: グループごと追加してボタンが両方出るように修正
+      listEl.appendChild(li);
+    });
+  }
+
+  function deleteSingle(index) {
+    unlearnedWords.splice(index, 1);
+    saveData();
+    renderManageList();
+  }
+
+  function deleteLearnedSingle(index) {
+    learnedWords.splice(index, 1);
+    saveData();
+    renderLearnedList();
+  }
+
+  /* 単語の個別追加 */
+  function handleAddSingle(evt) {
+    evt.preventDefault();
+    const wordInput = document.getElementById('add-word');
+    const meaningInput = document.getElementById('add-meaning');
+
+    unlearnedWords.push({
+      id: Date.now(),
+      word: wordInput.value.trim(),
+      meaning: meaningInput.value.trim()
+    });
+
+    saveData();
+    wordInput.value = '';
+    meaningInput.value = '';
+    renderManageList();
+    alert('追加しました！');
+  }
+
+  /* 区切り文字を自動判別して一括登録する処理 */
+  function processImportText(rawText) {
+    if (!rawText.trim()) return 0;
+
+    const lines = rawText.split('\n');
+    let addedCount = 0;
+
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return;
+
+      let word = '', meaning = [];
+
+      if (trimmed.includes('\t')) {
+        [word, ...meaning] = trimmed.split('\t');
+      } else if (trimmed.includes(':') || trimmed.includes('：')) {
+        [word, ...meaning] = trimmed.split(/[:：]/);
+      } else if (trimmed.includes(' - ')) {
+        [word, ...meaning] = trimmed.split(' - ');
+      } else if (trimmed.includes('/')) {
+        [word, ...meaning] = trimmed.split('/');
+      } else if (trimmed.includes(',')) {
+        [word, ...meaning] = trimmed.split(',');
+      } else {
+        const spaceIndex = trimmed.search(/\s/);
+        if (spaceIndex !== -1) {
+          word = trimmed.substring(0, spaceIndex);
+          meaning = [trimmed.substring(spaceIndex).trim()];
+        }
+      }
+
+      const meaningText = Array.isArray(meaning) ? meaning.join(' ').trim() : '';
+      if (word && meaningText) {
+        unlearnedWords.push({
+          id: Date.now() + Math.random(),
+          word: word.trim(),
+          meaning: meaningText
+        });
+        addedCount++;
+      }
+    });
+
+    saveData();
+    renderManageList();
+    return addedCount;
+  }
+
+  function handleBulkImport() {
+    const rawText = document.getElementById('import-text').value;
+    const addedCount = processImportText(rawText);
+    if (addedCount > 0) {
+      document.getElementById('import-text').value = '';
+      alert(`${addedCount}件を一括追加しました！`);
+    } else {
+      alert('有効なデータが見つかりませんでした。書き方を確認してください。');
+    }
+  }
+
+  function handleCsvFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const addedCount = processImportText(e.target.result);
+      alert(`${addedCount}件をファイルから一括追加しました！`);
+      event.target.value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  /* バックアップ操作 */
+  function exportToFile() {
+    const payload = { unlearnedWords, learnedWords };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+    const a = document.createElement('a');
+    a.href = dataStr;
+    a.download = `flashcards_backup_${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  function importFromFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const importedData = JSON.parse(e.target.result);
+        if (importedData.unlearnedWords && importedData.learnedWords) {
+          unlearnedWords = importedData.unlearnedWords;
+          learnedWords = importedData.learnedWords;
+        } else if (Array.isArray(importedData)) {
+          unlearnedWords = importedData;
+          learnedWords = [];
+        }
+        saveData();
+        updateCard();
+        alert('ファイルからデータを復元しました！');
+      } catch (err) {
+        alert('ファイルの読み込みに失敗しました。');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function handleClearAll() {
+    if (confirm('本当にすべてのデータを削除して初期化しますか？')) {
+      unlearnedWords = [];
+      learnedWords = [];
+      saveData();
+      updateCard();
+      alert('初期化しました');
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
