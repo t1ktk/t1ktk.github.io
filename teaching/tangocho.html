@@ -33,8 +33,28 @@
       box-sizing: border-box;
     }
 
-    header { text-align: center; margin-bottom: 20px; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
     h1 { font-size: 1.25rem; font-weight: 700; margin: 0; color: #0f172a; }
+
+    /* ストリーク表示バッジ */
+    .streak-badge {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #ea580c;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
     
     .tabs {
       display: flex; gap: 4px; margin-bottom: 16px; background: #e2e8f0;
@@ -48,6 +68,34 @@
     .tab-btn.active { background: #ffffff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
+
+    /* モード設定（タイマー切り替え） */
+    .mode-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+      color: var(--subtext);
+    }
+
+    /* タイマーバー */
+    .timer-container {
+      height: 4px;
+      width: 100%;
+      background: #e2e8f0;
+      border-radius: 2px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      display: none;
+    }
+    .timer-container.active { display: block; }
+    .timer-bar {
+      height: 100%;
+      width: 100%;
+      background: var(--primary);
+      transition: width 0.05s linear;
+    }
 
     /* フラッシュカード */
     .card {
@@ -63,6 +111,18 @@
     .card .word { font-size: 1.75rem; font-weight: 700; margin-bottom: 8px; word-break: break-word; color: #0f172a; }
     .card .meaning { font-size: 1.2rem; color: var(--primary); font-weight: 600; word-break: break-word; }
     .card .label { font-size: 0.75rem; color: #94a3b8; position: absolute; top: 12px; right: 16px; font-weight: 500; }
+    .card .level-badge {
+      font-size: 0.7rem;
+      color: var(--subtext);
+      position: absolute;
+      top: 12px;
+      left: 16px;
+      font-weight: 700;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
     .progress-bar { text-align: center; font-size: 0.8rem; color: var(--subtext); margin-bottom: 12px; font-weight: 500; }
 
     /* ボタン・フォーム */
@@ -101,8 +161,9 @@
     .word-info { display: flex; flex-direction: column; }
     .word-info .en { font-weight: 700; font-size: 0.9rem; }
     .word-info .ja { font-size: 0.8rem; color: var(--subtext); }
+    .word-info .lvl { font-size: 0.72rem; color: var(--primary); font-weight: 700; }
 
-    /* スッキリしたフッター風の注意事項（container内に配置） */
+    /* 注意事項 */
     .notes-box {
       border-top: 1px solid var(--border);
       padding-top: 16px;
@@ -131,6 +192,9 @@
 <div class="container">
   <header>
     <h1>英単語学習用ツール</h1>
+    <div class="streak-badge">
+      🔥 <span id="streak-count">0</span>日連続
+    </div>
   </header>
 
   <div class="tabs">
@@ -142,7 +206,21 @@
 
   <!-- 1. 未学習カード -->
   <div id="tab-learn" class="tab-content active">
+    
+    <div class="mode-toggle">
+      <span>間隔反復: 低Lv重視</span>
+      <label style="cursor: pointer;">
+        <input type="checkbox" id="timer-toggle" onchange="toggleSpeedMode(this.checked)">
+        ⚡ 3秒タイマー
+      </label>
+    </div>
+
+    <div class="timer-container" id="timer-container">
+      <div class="timer-bar" id="timer-bar"></div>
+    </div>
+
     <div id="card" class="card" onclick="flipCard()">
+      <span class="level-badge" id="card-level">Lv.1</span>
       <span class="label" id="card-label">表面</span>
       <div class="word" id="card-text">単語がありません</div>
       <div class="meaning" id="card-subtext" style="display: none;"></div>
@@ -156,9 +234,10 @@
       <button class="btn btn-secondary" onclick="nextCard()">次へ</button>
     </div>
 
+    <!-- Leitnerレベル別評価ボタン -->
     <div class="btn-sub-group">
-      <button class="btn btn-success btn-full" onclick="markAsLearned()">覚えた！</button>
-      <button class="btn btn-secondary btn-full" onclick="shuffleCards()">シャッフル</button>
+      <button class="btn btn-danger btn-full" onclick="answerCard(false)">✕ 忘れた (Lv-1)</button>
+      <button class="btn btn-success btn-full" onclick="answerCard(true)">◯ 覚えた (Lv+1)</button>
     </div>
   </div>
 
@@ -225,13 +304,13 @@
     </div>
   </div>
 
-  <!-- 注意事項（container内部に移動・幅統一） -->
+  <!-- 注意事項 -->
   <footer class="notes-box">
     <h4>利用上の注意</h4>
     <ul>
       <li>データは使用している端末のブラウザ（ローカルストレージ）に自動保存されます。</li>
-      <li>閲覧履歴やキャッシュの消去や1週間程度開かなかった場合、プライベートモード等の利用時はデータが消える場合があります。</li>
-      <li>必要に応じてにバックアップタブからファイルを保存しておくことをおすすめします。</li>
+      <li>閲覧履歴やキャッシュの消去、プライベートモード等の利用時はデータが消える場合があります。</li>
+      <li>必要に応じてバックアップタブからファイルを保存しておくことをおすすめします。</li>
       <li>別のスマホやPCへ引き継ぐ際は、バックアップしたファイルを復元してください。</li>
     </ul>
   </footer>
@@ -239,21 +318,29 @@
 </div>
 
 <script>
-  // 初期データの定義
+  // 初期データの定義（levelプロパティ付与）
   const defaultList = [
-    { id: 1, word: "vote", meaning: "投票する" },
-    { id: 2, word: "polling station", meaning: "投票所" },
-    { id: 3, word: "election", meaning: "選挙" }
+    { id: 1, word: "vote", meaning: "投票する", level: 1 },
+    { id: 2, word: "polling station", meaning: "投票所", level: 1 },
+    { id: 3, word: "election", meaning: "選挙", level: 1 }
   ];
 
   // ローカルストレージの読み書き
   let unlearnedWords = JSON.parse(localStorage.getItem('unlearned_words')) || [...defaultList];
   let learnedWords = JSON.parse(localStorage.getItem('learned_words')) || [];
+  let streakData = JSON.parse(localStorage.getItem('streak_data')) || { count: 0, lastDate: "" };
+
+  // データ互換性のために既存データにlevelがなければ1を付与
+  unlearnedWords = unlearnedWords.map(w => ({ ...w, level: w.level || 1 }));
 
   let currentIndex = 0;
   let isShowingFront = true;
+  let speedMode = false;
+  let timerInterval = null;
+  const TIMER_SECONDS = 3;
 
   function init() {
+    checkStreak();
     updateCard();
   }
 
@@ -262,7 +349,35 @@
     localStorage.setItem('learned_words', JSON.stringify(learnedWords));
   }
 
+  /* 1. 学習ストリーク（連続学習日数）制御 */
+  function checkStreak() {
+    const today = new Date().toISOString().slice(0, 10);
+    const last = streakData.lastDate;
+
+    if (last) {
+      const lastDate = new Date(last);
+      const currentDate = new Date(today);
+      const diffDays = Math.ceil(Math.abs(currentDate - lastDate) / (1000 * 60 * 60 * 24));
+
+      if (diffDays > 1) {
+        streakData.count = 0; // 1日以上空いたらリセット
+      }
+    }
+    document.getElementById('streak-count').textContent = streakData.count;
+  }
+
+  function recordActivity() {
+    const today = new Date().toISOString().slice(0, 10);
+    if (streakData.lastDate !== today) {
+      streakData.count += 1;
+      streakData.lastDate = today;
+      localStorage.setItem('streak_data', JSON.stringify(streakData));
+      document.getElementById('streak-count').textContent = streakData.count;
+    }
+  }
+
   function switchTab(tabName, evt) {
+    stopTimer();
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById(`tab-${tabName}`).classList.add('active');
@@ -273,17 +388,20 @@
     if (tabName === 'manage') renderManageList();
   }
 
-  /* フラッシュカード制御 */
+  /* 2. フラッシュカード制御（間隔反復） */
   function updateCard() {
+    stopTimer();
     const textEl = document.getElementById('card-text');
     const subtextEl = document.getElementById('card-subtext');
     const labelEl = document.getElementById('card-label');
+    const levelEl = document.getElementById('card-level');
     const progressEl = document.getElementById('progress');
 
     if (unlearnedWords.length === 0) {
       textEl.textContent = "未学習の単語はありません！";
       subtextEl.style.display = "none";
       labelEl.textContent = "COMPLETE";
+      levelEl.textContent = "Lv.-";
       progressEl.textContent = "0 / 0";
       return;
     }
@@ -291,16 +409,22 @@
     if (currentIndex >= unlearnedWords.length) currentIndex = 0;
     if (currentIndex < 0) currentIndex = unlearnedWords.length - 1;
 
+    const currentItem = unlearnedWords[currentIndex];
+
     isShowingFront = true;
-    textEl.textContent = unlearnedWords[currentIndex].word;
-    subtextEl.textContent = unlearnedWords[currentIndex].meaning;
+    textEl.textContent = currentItem.word;
+    subtextEl.textContent = currentItem.meaning;
     subtextEl.style.display = "none";
     labelEl.textContent = "表面";
+    levelEl.textContent = `Lv.${currentItem.level || 1}`;
     progressEl.textContent = `${currentIndex + 1} / ${unlearnedWords.length}`;
+
+    if (speedMode) startTimer();
   }
 
   function flipCard() {
     if (unlearnedWords.length === 0) return;
+    stopTimer();
     const subtextEl = document.getElementById('card-subtext');
     const labelEl = document.getElementById('card-label');
 
@@ -321,32 +445,97 @@
     updateCard();
   }
 
-  /* 「覚えた！」処理 */
-  function markAsLearned() {
+  /* 3. Leitner方式（習得レベル上下 & 「覚えた語」移動） */
+  function answerCard(isCorrect) {
     if (unlearnedWords.length === 0) return;
-    const item = unlearnedWords.splice(currentIndex, 1)[0];
-    learnedWords.push(item);
-    
+
+    recordActivity(); // ストリークを記録
+
+    const item = unlearnedWords[currentIndex];
+    if (!item.level) item.level = 1;
+
+    if (isCorrect) {
+      item.level += 1;
+      // Lv.5に達したら「覚えた語」へ自動移動
+      if (item.level > 5) {
+        const learnedItem = unlearnedWords.splice(currentIndex, 1)[0];
+        learnedWords.push(learnedItem);
+      }
+    } else {
+      if (item.level > 1) item.level -= 1;
+    }
+
     saveData();
-    if (currentIndex >= unlearnedWords.length && unlearnedWords.length > 0) currentIndex = 0;
+
+    // 次のカードを選出（レベルが低い単語を確率的に優先出題）
+    pickNextWeightedIndex();
     updateCard();
+  }
+
+  // レベルが低いほど優先的に選ばれる重み付け選出
+  function pickNextWeightedIndex() {
+    if (unlearnedWords.length === 0) return;
+
+    let weights = unlearnedWords.map(w => Math.max(1, 6 - (w.level || 1)));
+    let totalWeight = weights.reduce((a, b) => a + b, 0);
+
+    let randomNum = Math.random() * totalWeight;
+    for (let i = 0; i < unlearnedWords.length; i++) {
+      if (randomNum < weights[i]) {
+        currentIndex = i;
+        return;
+      }
+      randomNum -= weights[i];
+    }
+    currentIndex = 0;
+  }
+
+  /* 4. 3秒タイマー機能 */
+  function toggleSpeedMode(enabled) {
+    speedMode = enabled;
+    document.getElementById('timer-container').classList.toggle('active', enabled);
+    if (enabled) {
+      startTimer();
+    } else {
+      stopTimer();
+    }
+  }
+
+  function startTimer() {
+    stopTimer();
+    if (!speedMode || unlearnedWords.length === 0) return;
+
+    const timerBar = document.getElementById('timer-bar');
+    timerBar.style.width = '100%';
+
+    let startTime = Date.now();
+    let duration = TIMER_SECONDS * 1000;
+
+    timerInterval = setInterval(() => {
+      let elapsed = Date.now() - startTime;
+      let remainingPercent = Math.max(0, 100 - (elapsed / duration) * 100);
+      timerBar.style.width = `${remainingPercent}%`;
+
+      if (elapsed >= duration) {
+        stopTimer();
+        flipCard(); // 時間切れで自動裏返し
+      }
+    }, 50);
+  }
+
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
   }
 
   function restoreToUnlearned(index) {
     const item = learnedWords.splice(index, 1)[0];
+    item.level = 1; // 戻すときはLv.1に初期化
     unlearnedWords.push(item);
     saveData();
     renderLearnedList();
-  }
-
-  function shuffleCards() {
-    for (let i = unlearnedWords.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [unlearnedWords[i], unlearnedWords[j]] = [unlearnedWords[j], unlearnedWords[i]];
-    }
-    currentIndex = 0;
-    saveData();
-    updateCard();
   }
 
   /* 単語リストの描画 */
@@ -366,11 +555,16 @@
       enSpan.className = 'en';
       enSpan.textContent = item.word;
 
+      const lvlSpan = document.createElement('span');
+      lvlSpan.className = 'lvl';
+      lvlSpan.textContent = `Lv.${item.level || 1}`;
+
       const jaSpan = document.createElement('span');
       jaSpan.className = 'ja';
       jaSpan.textContent = item.meaning;
 
       infoDiv.appendChild(enSpan);
+      infoDiv.appendChild(lvlSpan);
       infoDiv.appendChild(jaSpan);
 
       const delBtn = document.createElement('button');
@@ -427,7 +621,7 @@
       btnGroup.appendChild(delBtn);
 
       li.appendChild(infoDiv);
-      li.appendChild(btnGroup); // 修正: グループごと追加してボタンが両方出るように修正
+      li.appendChild(btnGroup);
       listEl.appendChild(li);
     });
   }
@@ -453,7 +647,8 @@
     unlearnedWords.push({
       id: Date.now(),
       word: wordInput.value.trim(),
-      meaning: meaningInput.value.trim()
+      meaning: meaningInput.value.trim(),
+      level: 1
     });
 
     saveData();
@@ -463,7 +658,7 @@
     alert('追加しました！');
   }
 
-  /* 区切り文字を自動判別して一括登録する処理 */
+  /* 一括登録処理 */
   function processImportText(rawText) {
     if (!rawText.trim()) return 0;
 
@@ -499,7 +694,8 @@
         unlearnedWords.push({
           id: Date.now() + Math.random(),
           word: word.trim(),
-          meaning: meaningText
+          meaning: meaningText,
+          level: 1
         });
         addedCount++;
       }
@@ -536,7 +732,7 @@
 
   /* バックアップ操作 */
   function exportToFile() {
-    const payload = { unlearnedWords, learnedWords };
+    const payload = { unlearnedWords, learnedWords, streakData };
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
     const a = document.createElement('a');
     a.href = dataStr;
@@ -555,13 +751,16 @@
       try {
         const importedData = JSON.parse(e.target.result);
         if (importedData.unlearnedWords && importedData.learnedWords) {
-          unlearnedWords = importedData.unlearnedWords;
+          unlearnedWords = importedData.unlearnedWords.map(w => ({ ...w, level: w.level || 1 }));
           learnedWords = importedData.learnedWords;
+          if (importedData.streakData) streakData = importedData.streakData;
         } else if (Array.isArray(importedData)) {
-          unlearnedWords = importedData;
+          unlearnedWords = importedData.map(w => ({ ...w, level: w.level || 1 }));
           learnedWords = [];
         }
         saveData();
+        localStorage.setItem('streak_data', JSON.stringify(streakData));
+        checkStreak();
         updateCard();
         alert('ファイルからデータを復元しました！');
       } catch (err) {
@@ -576,7 +775,10 @@
     if (confirm('本当にすべてのデータを削除して初期化しますか？')) {
       unlearnedWords = [];
       learnedWords = [];
+      streakData = { count: 0, lastDate: "" };
       saveData();
+      localStorage.setItem('streak_data', JSON.stringify(streakData));
+      checkStreak();
       updateCard();
       alert('初期化しました');
     }
