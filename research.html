@@ -180,6 +180,30 @@ ul.list a:hover {
     text-decoration: underline;
 }
 
+/* 折りたたみ要素用スタイル */
+.expandable-list {
+    display: none;
+}
+
+.expandable-list.open {
+    display: block;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: #0099FF;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 4px 0;
+    margin-top: 4px;
+    text-decoration: none;
+}
+
+.toggle-btn:hover {
+    text-decoration: underline;
+}
+
 /* researchmap外プロジェクト用スタイル */
 .other-projects {
     margin-bottom: 1.2rem;
@@ -277,11 +301,14 @@ ul.list a:hover {
             <li>髙塚幸治 （2026）「誰に投票を啓発されるのか：啓発主体の違いによる効果」2026年度日本選挙学会総会・研究会</li>
             <li>髙塚幸治 （2026）「好きすぎて増？嫌いすぎて滅？（投票率）」令和7年度博士後期課程学生支援プロジェクト採用者による研究発表・交流会（代替開催）</li>
             <li>髙塚幸治 （2026）「人流データを通じた投票日の有権者の投票後の行動分析」DSEP成果報告会</li>
+          </ul>
+          <ul class="list expandable-list" id="presentation-more">
             <li>髙塚幸治 （2025）「投票後の消費余暇活動によるコスト合理化の実態解明：人流データによる分析」公共選択学会第29回大会</li>
             <li>髙塚幸治 （2025）「投票と消費余暇活動の一体化による投票コスト合理化の検証」日本行動計量学会第53回大会</li>
             <li>髙塚幸治 （2025）「コストが投票参加に与える影響：選挙割と義務投票制を通じた分析」2025年度日本選挙学会総会・研究会</li>
             <li>髙塚幸治・中井遼 （2024）「政治意識の涵養に生徒会活動は影響を与えるのか」2024年度日本政治学会総会・研究大会</li>
           </ul>
+          <button type="button" class="toggle-btn" id="toggle-presentations" aria-expanded="false">▼ もっと見る</button>
         </div>
         <div class="pub-category">
           <h3>共同研究・競争的資金等の研究課題</h3>
@@ -348,6 +375,16 @@ const navMenu = document.getElementById("nav-menu");
 hamburger.addEventListener("click", () => {
     hamburger.classList.toggle("open");
     navMenu.classList.toggle("open");
+});
+
+// 研究発表の展開・折りたたみ処理
+const toggleBtn = document.getElementById("toggle-presentations");
+const presentationMore = document.getElementById("presentation-more");
+
+toggleBtn.addEventListener("click", () => {
+    const isOpen = presentationMore.classList.toggle("open");
+    toggleBtn.textContent = isOpen ? "▲ 閉じる" : "▼ もっと見る";
+    toggleBtn.setAttribute("aria-expanded", isOpen);
 });
 </script>
 </body>
