@@ -25,12 +25,12 @@ jobs:
         run: |
           mkdir build
           # slide.md を読み込み、buildフォルダ内に index.html として出力
-          npx @marp-team/marp-cli@latest slide.md -o build/index.html
+          npx @marp-team/marp-cli@latest slide_template.md -o build/slide_template.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build # 公開するファイルが入っているフォルダを指定
+          path: ./research/file # 公開するファイルが入っているフォルダを指定
 
   deploy:
     environment:
