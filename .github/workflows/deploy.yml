@@ -17,21 +17,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # 1. slide_template.md だけを Marp で slide_template.html に変換
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - name: Build Marp Slide
         run: |
-          npx @marp-team/marp-cli@latest file/slide_template.md --html
-          rm file/slide_template.md
+          # 1. 任意の位置にある *slide*.md を自動検索して Marp で HTML 化
+          find . -type f -name "*slide*.md" | while read -r md_file; do
+            npx --yes @marp-team/marp-cli@latest "$md_file" --html -o "${md_file%.md}.html"
+            rm "$md_file"
+          done
 
-      # 2. 残りの処理（その他.mdの変換、既存HTMLの保持）をすべてJekyllに丸投げ
-      - uses: actions/configure-pages@v5
-      - uses: actions/jekyll-build-pages@v1
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
         with:
           source: ./
           destination: ./_site
-      - uses: actions/upload-pages-artifact@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
 
   deploy:
     environment:
@@ -40,4 +47,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
