@@ -20,6 +20,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
       - name: Build HTML and prepare output
         run: |
           # 1. 公開用フォルダ _site を作成し全ファイルを複製
@@ -30,11 +35,11 @@ jobs:
           find _site -name "*.md" | while read -r md_file; do
             html_file="${md_file%.md}.html"
             
-            # ファイル内に `marp: true` の記述がある、またはファイル名に `slide` が含まれる場合は Marp スライド化
+            # marp: true の記述がある、またはファイル名に slide が含まれる場合は Marp 化
             if grep -q "marp: true" "$md_file" || [[ "$md_file" == *"slide"* ]]; then
               npx @marp-team/marp-cli@latest "$md_file" --html -o "$html_file"
             else
-              # 通常のテキスト Markdown は標準的な HTML ドキュメントに変換（GitHub風スタイルを適用）
+              # 通常のテキスト Markdown は pandoc で標準 HTML ページに変換
               pandoc "$md_file" -s \
                 --metadata pagetitle="$(basename "$md_file" .md)" \
                 -c "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css" \
