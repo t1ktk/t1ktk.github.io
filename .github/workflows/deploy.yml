@@ -1,4 +1,4 @@
-　name: Deploy Marp to GitHub Pages
+name: Deploy Marp to GitHub Pages
 
 on:
   push:
@@ -26,36 +26,18 @@ jobs:
           mkdir -p _site
           rsync -av --exclude='_site' --exclude='.git' --exclude='.github' . _site/
 
-          # 2. 標準搭載の Node.js で追加インストール不要で一括変換
-          node -e '
-          const fs = require("fs");
-          const path = require("path");
-          const { execSync } = require("child_process");
-
-          function getFiles(dir) {
-            return fs.readdirSync(dir, { withFileTypes: true }).flatMap(dirent => {
-              const res = path.resolve(dir, dirent.name);
-              return dirent.isDirectory() ? getFiles(res) : res;
-            });
-          }
-
-          const files = getFiles("_site").filter(f => f.endsWith(".md"));
-          
-          files.forEach(file => {
-            const content = fs.readFileSync(file, "utf8");
-            const htmlPath = file.replace(/\.md$/, ".html");
-
-            if (content.includes("marp: true") || path.basename(file).toLowerCase().includes("slide")) {
-              // Marp スライド化
-              execSync(`npx @marp-team/marp-cli@latest "${file}" --html -o "${htmlPath}"`);
-            } else {
-              // 通常の文章 MD は npx -y marked で即座に HTML 化
-              const body = execSync(`npx -y marked "${file}"`).toString();
-              const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css"><style>.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; } @media (max-width: 767px) { .markdown-body { padding: 15px; } }</style></head><body class="markdown-body">${body}</body></html>`;
-              fs.writeFileSync(htmlPath, html);
-            }
-          });
-          '
+          # 2. 通常の.md と Marp用.md を判定して一括変換
+          find _site -name "*.md" | while read -r md_file; do
+            html_file="${md_file%.md}.html"
+            
+            if grep -q "marp: true" "$md_file" || [[ "$md_file" == *"slide"* ]]; then
+              # Marp スライド化
+              npx @marp-team/marp-cli@latest "$md_file" --html -o "$html_file"
+            else
+              # 通常テキスト MD の HTML 化
+              npx -y marked "$md_file" > "$html_file"
+            fi
+          done
 
           # 3. Jekyll無効化ファイルを配置
           touch _site/.nojekyll
