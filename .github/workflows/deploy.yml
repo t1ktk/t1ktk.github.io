@@ -1,10 +1,45 @@
-- name: Build HTML from Marp
+name: Deploy Marp to GitHub Pages
+
+on:
+  push:
+    branches: [ main ] # mainブランチに変更がプッシュされたら実行
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build HTML from Marp
         run: |
-          # Marpで一括変換
-          npx @marp-team/marp-cli@latest --input-dir . --output build --html
+          # slide_template.md だけを HTML に変換して出力
+          npx @marp-team/marp-cli@latest file/slide_template.md --html -o file/slide_template.html
 
-          # GitHub PagesのJekyll処理を無効化（これがないとHTMLが無視されて404になります）
-          touch build/.nojekyll
+          # Jekyll処理を無効化
+          touch .nojekyll
 
-          # デバッグ用：生成されたフォルダ構造をログに出力
-          ls -R build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: . # リポジトリ全体（既存の.html + 今回変換した.html）を公開
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
