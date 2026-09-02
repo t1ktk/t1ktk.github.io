@@ -22,16 +22,19 @@ jobs:
 
       - name: Build HTML from Marp and prepare output
         run: |
-          # 1. 出力用ディレクトリ _site を作成
+          # 1. 公開用フォルダ _site を作成し既存ファイルを同期
           mkdir -p _site
-
-          # 2. 既存の全ファイル（他の.html等）を _site へ同期（自身や.gitを除外）
           rsync -av --exclude='_site' --exclude='.git' --exclude='.github' . _site/
 
-          # 3. slide_template.md だけを _site/file/slide_template.html にビルド出力
-          npx @marp-team/marp-cli@latest file/slide_template.md --html -o _site/file/slide_template.html
+          # 2. slide_template.md を自動検索して同階層に HTML 化
+          TARGET=$(find _site -name "slide_template.md" | head -n 1)
+          if [ -z "$TARGET" ]; then
+            echo "エラー: slide_template.md が見つかりません。"
+            exit 1
+          fi
+          npx @marp-team/marp-cli@latest --html "$TARGET"
 
-          # 4. Jekyll 処理無効化ファイルを配置
+          # 3. Jekyll無効化ファイルを配置
           touch _site/.nojekyll
 
       - name: Upload artifact
