@@ -22,17 +22,12 @@ jobs:
 
       - name: Build HTML from Marp and prepare output
         run: |
-          # 1. 公開用フォルダ _site を作成し既存ファイルを同期
+          # 1. 公開用フォルダ _site を作成し、全ファイル（既存.htmlや画像など）を複製
           mkdir -p _site
           rsync -av --exclude='_site' --exclude='.git' --exclude='.github' . _site/
 
-          # 2. slide_template.md を自動検索して同階層に HTML 化
-          TARGET=$(find _site -name "slide_template.md" | head -n 1)
-          if [ -z "$TARGET" ]; then
-            echo "エラー: slide_template.md が見つかりません。"
-            exit 1
-          fi
-          npx @marp-team/marp-cli@latest --html "$TARGET"
+          # 2. _site 内のすべての .md ファイル（テキスト用・Marp用問わず）を一括 HTML 化
+          npx @marp-team/marp-cli@latest --input-dir _site --output _site --html
 
           # 3. Jekyll無効化ファイルを配置
           touch _site/.nojekyll
@@ -52,3 +47,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
