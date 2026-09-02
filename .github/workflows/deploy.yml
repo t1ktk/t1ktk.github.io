@@ -20,14 +20,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build HTML from Marp and prepare output
+      - name: Build HTML and prepare output
         run: |
-          # 1. 公開用フォルダ _site を作成し、全ファイル（既存.htmlや画像など）を複製
+          # 1. 公開用フォルダ _site を作成し全ファイルを複製
           mkdir -p _site
           rsync -av --exclude='_site' --exclude='.git' --exclude='.github' . _site/
 
-          # 2. _site 内のすべての .md ファイル（テキスト用・Marp用問わず）を一括 HTML 化
-          npx @marp-team/marp-cli@latest --input-dir _site --output _site --html
+          # 2. .md ファイルごとに処理を自動判定して変換
+          find _site -name "*.md" | while read -r md_file; do
+            html_file="${md_file%.md}.html"
+            
+            # ファイル内に `marp: true` の記述がある、またはファイル名に `slide` が含まれる場合は Marp スライド化
+            if grep -q "marp: true" "$md_file" || [[ "$md_file" == *"slide"* ]]; then
+              npx @marp-team/marp-cli@latest "$md_file" --html -o "$html_file"
+            else
+              # 通常のテキスト Markdown は標準的な HTML ドキュメントに変換（GitHub風スタイルを適用）
+              pandoc "$md_file" -s \
+                --metadata pagetitle="$(basename "$md_file" .md)" \
+                -c "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css" \
+                -V body-class="markdown-body" \
+                -o "$html_file"
+            fi
+          done
 
           # 3. Jekyll無効化ファイルを配置
           touch _site/.nojekyll
@@ -47,4 +61,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
