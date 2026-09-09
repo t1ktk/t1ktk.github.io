@@ -177,7 +177,7 @@ style: |
 **学会大会名称【セッション名】**
 所属
 名前
-<span class="email">mail<span>@</span>adress</span>
+<span class="email">mail<span>@</span>address</span>
 
 ---
 
