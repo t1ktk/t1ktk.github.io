@@ -25,11 +25,14 @@ jobs:
 
       - name: Build Marp Slide
         run: |
-          # 1. 任意の位置にある *slide*.md を自動検索して Marp で HTML 化
-          find . -type f -name "*slide*.md" | while read -r md_file; do
-            npx --yes @marp-team/marp-cli@latest "$md_file" --html -o "${md_file%.md}.html"
-            rm "$md_file"
-          done
+          # research/file/slide ディレクトリ配下の全 .md を Marp で HTML 化
+          TARGET_DIR="research/file/slide"
+          if [ -d "$TARGET_DIR" ]; then
+            find "$TARGET_DIR" -type f -name "*.md" | while read -r md_file; do
+              npx --yes @marp-team/marp-cli@latest "$md_file" --html -o "${md_file%.md}.html"
+              rm "$md_file"
+            done
+          fi
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
