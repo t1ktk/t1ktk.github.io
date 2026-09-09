@@ -28,8 +28,8 @@ jobs:
           TARGET_DIR="research/file/slide"
           if [ -d "$TARGET_DIR" ]; then
             find "$TARGET_DIR" -type f -name "*.md" | while read -r file; do
-              npx --yes @marp-team/marp-cli@latest "$file"
-              rm "$file"
+              npx --yes @marp-team/marp-cli@latest --html "$file" -o "${file%.md}.html" < /dev/null
+              rm -f "$file"
             done
           fi
 
