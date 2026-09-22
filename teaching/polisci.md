@@ -1,5 +1,5 @@
 # 政治学参考資料 
-# Political Science Readings & Resources
+Political Science Readings & Resources
 
 本ページは政治学の講義で学生に紹介した各回の参考資料集です。
 
