@@ -45,7 +45,9 @@ Academic Reading 1 Readings & Resources
 - [茅ヶ崎方式東京銀座ニュース英語ラボ「大川原化工機、冤罪事件」](https://zeron.co.jp/2025/07/15/%E5%A4%A7%E5%B7%9D%E5%8E%9F%E5%8C%96%E5%B7%A5%E6%A9%9F%E3%80%81%E5%86%A4%E7%BD%AA%E4%BA%8B%E4%BB%B6/)
 - [産経新聞「「紀州のドン・ファン」元妻の無罪判決要旨」](https://www.sankei.com/article/20241212-4KCGAADQJ5NTXDWFXHGRMJ7Y34/)
 - [JapanTimes "Osaka High Court upholds ex-wife’s acquittal in ‘Don Juan of Kishu’ case"](https://www.japantimes.co.jp/news/2026/03/24/japan/crime-legal/don-juan-women-upholding-high-court/)
+
 ---
+
 ## 第6回：実力行使（教科書Case5）
 ### 参考資料
 - [海上保安資料館横浜館 海上における法の支配の軌跡 PART2](https://www.youtube.com/watch?v=-iEH25l5isQ)※実力行使の手順の参考例として
