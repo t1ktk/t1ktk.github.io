@@ -120,7 +120,7 @@ Academic Reading 1 Readings & Resources
 - [砂川政教分離訴訟(空知太神社)-京都産業大学法学部憲法学習用基本判決集主題別判決一覧](https://www.cc.kyoto-su.ac.jp/~suga/hanrei/106-1.html)
 - [齊藤正彰「憲法的探見記　空知太神社編」](https://lex.juris.hokudai.ac.jp/~sait/tk03/tanken03.html)
 - [衆議院議員吉井英勝君提出陵墓の治定と祭祀に関する質問に対する答弁書](https://www.shugiin.go.jp/internet/itdb_shitsumon.nsf/html/shitsumon/b176001.htm)※国有地たる天皇陵等の政教分離に関する整理として
-- [NHKアーカイブス「昭和天皇　崩御」](https://www2.nhk.or.jp/archives/movies/?id=D0009030226_00000)※国の儀式(大喪の礼)と皇室儀式(大喪儀)での鳥居の取扱い
+- [NHKアーカイブス「昭和天皇　崩御」](https://www2.nhk.or.jp/archives/movies/?id=D0009030226_00000)※国の儀式(大喪の礼)と皇室の儀式(大喪儀)での鳥居の取扱い
 - [nippon.com 「シリーズ・2回のお代替わりを見つめて（8）在位30年式典：「大喪」が行われた30年前」](https://www.nippon.com/ja/japan-topics/c05508/#)
 
 ---
