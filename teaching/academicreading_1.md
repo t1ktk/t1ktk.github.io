@@ -6,7 +6,7 @@ Academic Reading 1 Readings & Resources
 原則としてレジュメやスライド本体はClassroom/Moodle/manaba等にアップロードしています。受講者で質問やリンク切れの報告等がある方は，授業時に指定した方法でご連絡ください。
 リンク先の方で，削除してほしい等ありましたらお手数ですがメールにてご連絡ください。
 
-本授業の教科書：[鳥飼慎一郎・溜箭将之・Brett Cumming（2019）『政治学入門』金星堂](https://www.kinsei-do.co.jp/books/3984/)
+教科書：[鳥飼慎一郎・溜箭将之・Brett Cumming（2019）『政治学入門』金星堂](https://www.kinsei-do.co.jp/books/3984/)
 
 ---
 ## 第2回：懲罰的損害賠償#1（教科書Case1）
@@ -40,7 +40,7 @@ Academic Reading 1 Readings & Resources
 ### 参考資料
 - [日本テレビ・世界仰天ニュース「O・J・シンプソン事件 議論を巻き起こした「世紀の裁判」とその後」](https://www.ntv.co.jp/gyoten/articles/3243iodiez4e8ggqyou.html)
 - [BBC "Japanese police apologise at grave of wrongfully accused man"](https://www.bbc.com/news/articles/c0e9jl2182no)
-- [JapanTimes "Tokyo Police admit `serious mistake` in investigation of spray dryer firm"](https://www.japantimes.co.jp/news/2025/08/07/japan/crime-legal/japan-police-illegal-investigation/)
+- [JapanTimes "Tokyo Police admit ’serious mistake’ in investigation of spray dryer firm"](https://www.japantimes.co.jp/news/2025/08/07/japan/crime-legal/japan-police-illegal-investigation/)
 - [毎日新聞 連載追跡公安捜査](https://mainichi.jp/tuiseki-koansosa/)
 - [茅ヶ崎方式東京銀座ニュース英語ラボ「大川原化工機、冤罪事件」](https://zeron.co.jp/2025/07/15/%E5%A4%A7%E5%B7%9D%E5%8E%9F%E5%8C%96%E5%B7%A5%E6%A9%9F%E3%80%81%E5%86%A4%E7%BD%AA%E4%BA%8B%E4%BB%B6/)
 - [産経新聞「「紀州のドン・ファン」元妻の無罪判決要旨」](https://www.sankei.com/article/20241212-4KCGAADQJ5NTXDWFXHGRMJ7Y34/)
