@@ -6,7 +6,7 @@ Academic Reading 1 Readings & Resources
 原則としてレジュメやスライド本体はClassroom/Moodle/manaba等にアップロードしています。受講者で質問やリンク切れの報告等がある方は，授業時に指定した方法でご連絡ください。
 リンク先の方で，削除してほしい等ありましたらお手数ですがメールにてご連絡ください。
 
-教科書：[鳥飼慎一郎・溜箭将之・Brett Cumming（2019）『政治学入門』金星堂](https://www.kinsei-do.co.jp/books/3984/)
+教科書：[鳥飼慎一郎・溜箭将之・Brett Cumming（2019）『Legal Minds-15 Journeys in Law 大学生のための法律英語　15の裁判物語 』金星堂](https://www.kinsei-do.co.jp/books/3984/)
 
 ---
 ## 第2回：懲罰的損害賠償#1（教科書Case1）
