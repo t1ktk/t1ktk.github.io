@@ -9,7 +9,7 @@ style: |
     justify-content: flex-start;
     align-items: flex-start;
     text-align: left;
-    font-family: "BIZ UDPGothic", "BIZ UDPゴシック", Meiryo;
+    font-family: "BIZ UDPGothic", "BIZ UDPゴシック", sans-serif;
     background-color: #fafafa;
     padding: 15px 60px 50px 60px;
     color: #000;
