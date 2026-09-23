@@ -1,5 +1,5 @@
 # 民法1参考資料 
-Constitutional Law 2 Readings & Resources
+Civil Law 1 Readings & Resources
 
 本ページは民法1の講義で学生に紹介した各回の参考資料集です。
 
