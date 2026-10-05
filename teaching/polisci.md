@@ -9,6 +9,18 @@ Political Science Readings & Resources
 
 ## 第1回：政治学の視角
 ### 参考資料
+#### 書籍
+[久米郁男著（2025）『原因を推論する 新版；政治分析方法論のすゝめ 量的方法と質的方法』有斐閣](https://www.yuhikaku.co.jp/book/b10190241.html)
+
+[伊藤光利著（2009）『ポリティカル・サイエンス事始め 第3版』有斐閣](https://www.yuhikaku.co.jp/book/b10187408.html)
+
+[松林哲也著（2021）『政治学と因果推論：比較から見える政治と社会』岩波書店](https://www.iwanami.co.jp/book/b593231.html)
+
+#### 論文等
+[Song Jaehyun・秦正樹（2020）「オンライン・サーベイ実験の方法」_理論と方法_ 35巻1号92-108頁](https://www.jstage.jst.go.jp/article/ojjams/35/1/35_92/_article/-char/ja)
+
+[粕谷祐子（2018）「政治学における「因果推論革命」の進行」_アジ研ワールド・トレンド_　269巻70-71頁](https://ir.ide.go.jp/record/50220/files/ZWT201803_034.pdf)
+
 ---
 ## 第2回：価値配分をめぐる理論（教科書第6章）
 ### 参考資料
