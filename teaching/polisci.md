@@ -47,6 +47,8 @@ Political Science Readings & Resources
 ## 第3回：政治体制（教科書第10章）
 ### 参考資料
 #### 書籍
+[山口定（1989）『現代政治学叢書3 政治体制』東京大学出版会](https://www.utp.or.jp/book/b300062.html)
+
 [建林正彦・曽我謙吾・待鳥聡史（2008）『比較政治制度論』有斐閣アルマ](https://www.yuhikaku.co.jp/book/b10187349.html)
 
 [久保慶一・末近浩太・高橋百合子（2016）『比較政治学の考え方』有斐閣ストゥディア](https://www.yuhikaku.co.jp/book/b10188715.html)
@@ -55,7 +57,7 @@ Political Science Readings & Resources
 
 [エリカ=フランツ（2021）『権威主義』白水社（上谷直克・今井宏平・中井遼訳）](https://www.hakusuisha.co.jp/book/b553087.html)
 
-[東島雅昌（近刊）「権威主義とは何か：独裁者の歴史と戦略、民主主義の岐路」中公新書](https://www.hanmoto.com/bd/isbn/9784121029355)
+[東島雅昌（近刊）『権威主義とは何か：独裁者の歴史と戦略、民主主義の岐路』中公新書](https://www.hanmoto.com/bd/isbn/9784121029355)
 
 ### Webサイト
 [Freedom House（2026）"Freedom Map" ](https://freedomhouse.org/explore-the-map?type=fiw&year=2026)
