@@ -62,11 +62,32 @@ Political Science Readings & Resources
 ### Webサイト
 [Freedom House（2026）"Freedom Map" ](https://freedomhouse.org/explore-the-map?type=fiw&year=2026)
 
-
 ---
 ## 第4回：政治家と政党（教科書第3章）
 ### 参考資料
+
+[川人貞史・吉野孝・平野浩・加藤淳子（2011）『現代の政党と選挙（新版）』](https://www.yuhikaku.co.jp/book/b10187809.html)
+
+[蒲島郁夫・竹中佳彦（2012）『現代政治学叢書8 イデオロギー』東京大学出版会](https://www.utp.or.jp/book/b306466.html)
+
+[濱本真輔（2022）『日本の国会議員：政治改革後の限界と可能性』中公新書](https://www.chuko.co.jp/shinsho/2022/04/102691.html)
+
+[中北浩爾（2017）『自民党―「一強」の実像』中公新書](https://www.chuko.co.jp/shinsho/2017/04/102428.html)
+
+[中北浩爾（2019）『自公政権とは何か：「連立」にみる強さの正体』ちくま新書](https://www.chikumashobo.co.jp/product/9784480072160/)
+
+[林芳正・津村啓介（2011）『国会議員の仕事：職業としての政治』中公新書](https://www.chuko.co.jp/shinsho/2011/03/102101.html)
+
+[待鳥聡史（2015）『代議制民主主義：「民意」と「政治家」を問い直す』中公新書](https://www.chuko.co.jp/shinsho/2015/11/102347.html)
+
+[三浦まり（2016）『日本の女性議員：どうすれば増えるのか』朝日選書](https://publications.asahi.com/product/17976.html)
+
+[待鳥聡史（2015）『シリーズ日本の政治6 政党システムと政党組織』東京大学出版会](https://www.utp.or.jp/book/b306992.html)
+
+[齋藤宙治（2025）「被選挙権年齢引下げに関する人々の意識：サーベイ実験による法定立候補年齢の研究」『社会科学研究』76巻201-229頁](https://doi.org/10.34607/jssiss.76.0_201)
+
 ---
+
 ## 第5回：議会（教科書第4章）
 ### 参考資料
 ---
