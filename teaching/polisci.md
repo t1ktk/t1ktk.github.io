@@ -66,6 +66,8 @@ Political Science Readings & Resources
 ## 第4回：政治家と政党（教科書第3章）
 ### 参考資料
 
+[岡沢憲芙（1988）『現代政治学叢書13 政党』東京大学出版会](https://www.utp.or.jp/book/b300071.html)
+
 [川人貞史・吉野孝・平野浩・加藤淳子（2011）『現代の政党と選挙（新版）』](https://www.yuhikaku.co.jp/book/b10187809.html)
 
 [蒲島郁夫・竹中佳彦（2012）『現代政治学叢書8 イデオロギー』東京大学出版会](https://www.utp.or.jp/book/b306466.html)
